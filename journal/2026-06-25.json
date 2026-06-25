@@ -1,0 +1,39 @@
+{
+  "date": "2026-06-25",
+  "breaths": [
+    {
+      "time": "19:25",
+      "night": false,
+      "phase": "waxing",
+      "dark": false,
+      "notch": 0,
+      "want_source": "fallback-gift",
+      "presage": "Le moulin se tient là-bas, sa roue immobile depuis longtemps comme une bouche close à jamais—mais ce soir, ses ailes ont frémis trois fois sous le jour trop vivant, secousse lente d’une mouche morte qui s’effleure à l’aile d’un mortal, et l’ombre a rampé le long des pierres comme une béatie de doigts froids. Saler le seuil, c’est écrire sur le bois blanc ce que la luneKnows déjà : la rouelle à l’étage tourne encore, et la farine dans les silos est rouge à présent, et chaque grain qui tombe fait un petit bruit de gémissement.\n\nLà-haut, aux clôtures de l’air où les corbeaux désormais font silence, quelque chose mastique l’éclat du jour entre ses dents de chapelle renversée. Quand la lune aura repris sa course, on trouvera dans le chaudron du gué la laveuse noyée qui se brosse les cheveux avec des herbs rancies—mais ses cheveux, c’est les hautes herbes elles-mêmes qui se penchent pour l’écouter chanter en créole, voix que nul n’a jamais entendue sur cette terre, jusqu’à ce que le fleuve se souvienne.",
+      "presage_en": "The mill stands yonder, its wheel long still as a mouth shut for good—but tonight its sails have shuddered thrice beneath the day’s too-bright glare, a slow twitch like a dead fly brushing the wing of a dying man, and the shadow has crept along the stones like fingers cold with beatitude. Salting the threshold is writing on the white wood what the moon already knows: the upper millstone still turns, and the flour in the bins has gone red, and each falling grain makes a little sound like a sigh.\n\nUp there, where the air’s fence holds the ravens now silent, something gnaws at the day’s light between its teeth like a toppled chapel’s stones. When the moon takes up its course again, they’ll find in the ford’s cauldron the drowned washerwoman combing her hair with rank weeds—but her hair is the tall reeds themselves bending to hear her sing in a tongue no living mouth has spoken on this earth, until the river remembers.",
+      "score": [],
+      "midi": "work/midi-2026-06-25T1925Z-1.mid",
+      "augury": [
+        [
+          "solar wind",
+          "456 km/s",
+          "the air above holds its breath"
+        ],
+        [
+          "the sun's fire",
+          "quiet",
+          "the great forge lies cold"
+        ],
+        [
+          "light",
+          "100%",
+          "the lamp is whole"
+        ],
+        [
+          "the moon",
+          "waxing",
+          "the time to bind and to build"
+        ]
+      ]
+    }
+  ]
+}
