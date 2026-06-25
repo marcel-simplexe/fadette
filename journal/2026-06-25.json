@@ -34,6 +34,40 @@
           "the time to bind and to build"
         ]
       ]
+    },
+    {
+      "time": "19:37",
+      "night": false,
+      "phase": "waxing",
+      "dark": false,
+      "notch": 0,
+      "want_source": "fallback-gift",
+      "presage": "La lune luisante derrière l'horizon trahit les laveuses au hasard, leur mouvement errant marque les nuages d'ombres pâles. Le meneu' de loups rassemble sa meute dans la brise, et la Grand’Bête, faite de brume et de désir paysan, s’étire dans l’étreinte du bois. Les flambettes corrompent les eaux dormantes, leurs lueurs trahissant les fades qui joueuses et perfides, effacent les traces des morts en quête de leur chemin. Les yeux du veuilleur, durcis par la lune bienveillante, se perdent dans le sillon du chemin de troupeau où la biche blanche d’Isis vient à peine s’immiscer, messagère silencieuse des vivants que nous sommes encore.",
+      "presage_en": "The bright moon betraying the washerwomen as they wander, their movements etching pale shadows across the clouds. The wolf leader gathers his pack in the breeze, and the Grand Beast, a misty creature born of country longing, stretches through the woods. The will-o'-the-wisps corrupt the still waters, their light revealing the mischievous and cunning fades who erase the paths of the dead seeking their way. The watcher's eyes, hardened by the kindly moon, gaze along the sheep path where the white doe of Isis barely slips in, a silent messenger from the living we still are.",
+      "score": [],
+      "midi": "work/midi-2026-06-25T1937Z-1.mid",
+      "augury": [
+        [
+          "solar wind",
+          "456 km/s",
+          "the air above holds its breath"
+        ],
+        [
+          "the sun's fire",
+          "quiet",
+          "the great forge lies cold"
+        ],
+        [
+          "light",
+          "100%",
+          "the lamp is whole"
+        ],
+        [
+          "the moon",
+          "waxing",
+          "the time to bind and to build"
+        ]
+      ]
     }
   ]
 }
