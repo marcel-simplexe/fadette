@@ -48,7 +48,7 @@ tempo:
 #  PRODUCT_ID and TOKEN come from GitHub secrets — NEVER from the code.
 infomaniak:
   base_url: "https://api.infomaniak.com/2/ai"
-  text_model: "mistral24b"     # the daily voice: the presages and the airs
+  text_model: "mistralai/Ministral-3-14B-Instruct-2512"     # the daily voice: the presages and the airs
 
 # The finale: one DENSE nouvelle of about twenty pages, written by Apertus -- the Swiss
 # sovereign model on the SAME host -- built movement by movement from the two months of
