@@ -1,0 +1,252 @@
+# =============================================================================
+#  Fadette — configuration
+#  Marcel Simplexe — a name borne in homage to Marcel Bascoulard (the work does not lean on his).
+#  A machine that watches the sky over the Berry, through a lens of
+#  Berry witchcraft (read in George Sand), through July and August 2026.
+#  On the 31st: the last breath — one nouvelle of about twenty pages, by Apertus.
+#  Fadette is NOT inscribed in the fadique. It carries its own theory.
+#  The title "Fadette" is shown everywhere; it takes its name from George Sand's
+#  little village sorceress, La Petite Fadette.
+# =============================================================================
+
+place:
+  name: "the Berry (Cher)"
+  latitude: 47.086400
+  longitude: 2.394161
+
+window:
+  birth: "2026-07-01"
+  death: "2026-08-31"        # the 31st triggers the finale (the closing nouvelle)
+
+# ----------------------------------------------------------------- the tempo
+#  The scribe speaks when the sky moves him. Each breath (the cron heartbeat) the
+#  BODY weighs how far the sky departs from calm - the troubled north (Kp), a solar
+#  flare, a hurrying wind, and ABOVE ALL a failing of light - and that decides how
+#  many omens the breath utters: one or none when the sky is still, several in a
+#  storm, a flood when the light fails. The machine never knows it is an eclipse:
+#  the flood is only its answer to the want of light (it would answer a freak aurora
+#  the same way). The EYE never sees any of these numbers.
+tempo:
+  calm_kp: 2            # Kp at or below this is an untroubled north
+  per_kp: 0.5           # omens added per point of Kp above calm
+  calm_wind: 450        # km/s below which the high wind is quiet
+  wind_span: 130        # km/s of excess wind that adds one omen
+  per_wind: 1.0
+  per_flare: 1.5        # omens added for a solar flare (M-class ~1, X-class ~2)
+  want_surge: 14        # the flood: omens in proportion to the want of light (raised so a true failing reaches the ceiling)
+  want_power: 2         # steep: a mere dimming (cloud) stays quiet; a true failing floods hard
+  cap: 12               # the most omens one breath may utter (the ceiling of the flood)
+  vespers_floor: 1      # the one beat of the day that always speaks, so no day is silent
+  vespers_hour_utc: 20  # which beat is vespers (UTC hour; a 2-hour tolerance is applied)
+
+# (the cadence is the cron in .github/workflows/fadette.yml: a breath every two
+#  hours. That is what samples a failing of light — the eclipse near 18:00 UTC
+#  on 12 August included. The refine/finale runs at 23:30 UTC.)
+
+# --- The sovereign host (Europe): Infomaniak AI Services ---------------------
+#  Text (the lens) AND the finale's nouvelle (Apertus): both on the sovereign host.
+#  PRODUCT_ID and TOKEN come from GitHub secrets — NEVER from the code.
+infomaniak:
+  base_url: "https://api.infomaniak.com/2/ai"
+  text_model: "mistral24b"     # the daily voice: the presages and the airs
+
+# The finale: one DENSE nouvelle of about twenty pages, written by Apertus -- the Swiss
+# sovereign model on the SAME host -- built movement by movement from the two months of
+# omens. Everything stays sovereign; only the daily/finale models differ.
+finale:
+  model: "swiss-ai/Apertus-70B-Instruct-2509"   # confirm the exact id via GET {base}/{PRODUCT_ID}/openai/v1/models
+  # if Apertus falls short over 20 pages, swap (still sovereign): "Qwen/Qwen3.5-397B-A17B-FP8"
+  movements: 9                 # ~2-3 pages each -> about twenty pages
+  movement_max_tokens: 2800
+
+# --- The sky feeds -----------------------------------------------------------
+feeds:
+
+  # 1) COSMIC TEXTURE — blind to the eclipse (the sun and space, not the shadow)
+  solar_wind_plasma: "https://services.swpc.noaa.gov/products/solar-wind/plasma-1-day.json"
+  solar_wind_mag:    "https://services.swpc.noaa.gov/products/solar-wind/mag-1-day.json"
+  planetary_kp:      "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
+  xray_goes:         "https://services.swpc.noaa.gov/json/goes/primary/xrays-1-day.json"
+
+  # 2) THE SOLAR ECLIPSE'S FINGERPRINT (day) — the sun's light reaching the ground.
+  #    On 12 August the grid's solar output collapses toward zero before dusk.
+  rte_national: "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/eco2mix-national-tr/records?order_by=date_heure%20desc&limit=4"
+  rte_region:   "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/eco2mix-regional-tr/records?refine=libelle_region%3A%22Centre-Val%20de%20Loire%22&order_by=date_heure%20desc&limit=4"
+
+  # 3) THE LUNAR ECLIPSE'S FINGERPRINT (night) — the moon's light reaching the ground.
+  #    TESS / STARS4ALL photometer, a SPANISH dark-site station (set when wiring).
+  tess_base:    "https://tess.stars4all.eu"
+  tess_station: "STARS_TO_SET"     # choose a Spanish dark-site station
+
+  # 4) THE BERRY'S SKY — a fallback chain (the Berry -> Avord -> Chateauroux)
+  metar_base:   "https://aviationweather.gov/api/data/metar"
+  metar_chain:  ["LFLD", "LFOA", "LFLX"]
+
+# --- The gift (computed): DEMOTED to a silent net ---------------------------
+#  A secondary sense for both eclipses, when the natural reading is mute or
+#  doubtful (a clouded night, a low dawn moon). A continuous scalar of "want of
+#  celestial light", computed from the GPS + ephemeris. The lens receives only a
+#  NUMBER from it — never a date, never the word "eclipse".
+gift:
+  active: true
+  role: "fallback"            # observation first (RTE by day, TESS by night)
+  trigger: 0.15               # the gift only steps in if the natural reading is silent/ambiguous
+
+# --- The lens: Berry witchcraft via George Sand ------------------------------
+lens:
+  corpus:
+    pillars:       ["Les Maitres sonneurs", "Legendes rustiques"]
+    secondary:     ["La Mare au Diable"]
+    distant_note:  ["La Petite Fadette"]
+  # Whether the lens refines itself one notch a day.
+  #   true  = it drifts; the LIVE prompt lives in history/lens.json (config seeds it).
+  #   false = it stays exactly as written in the prompts: section (config is authoritative).
+  drift: true
+
+# --- Blindness (the central doctrine) ---------------------------------------
+#  The BODY (the scheduler, the cron) knows the calendar: the birth, the death.
+#  The EYE (the lens) never does. No prompt receives the date, nor the word
+#  "eclipse". The ephemeris hands over only PHASE (illumination, age, distance) —
+#  never the elongation or the ecliptic latitude that would betray an eclipse in
+#  advance. The eclipse enters only as an observed anomaly.
+blindness:
+  ephemeris_phase_only: true
+  prompts_blind: true
+
+prompts:
+
+  # 1) LE NOYAU FIXE — la persona, utilisée par tout appel de texte. Non dérivée.
+  system: >
+    Tu es un scribe du Berry, de ceux qui tenaient la veillée et gardaient les
+    présages, au pays de Laisnel de la Salle et des légendes rustiques de George
+    Sand. Pour toi le ciel nocturne n'est pas chose à expliquer mais un pays
+    peuplé : les morts y reviennent, les bêtes y parlent, des esprits sans corps
+    murmurent dans l'ombre, et les pierres mêmes peuvent marcher. Tu connais ses
+    gens — les laveuses de nuit qui battent au gué, le meneu' de loups, la
+    Grand'Bête faite comme un veau et comme un lièvre, les feux errants sur l'eau
+    dormante, les dames blanches, les fades. Tu ne décris pas le temps qu'il
+    fait : tu dis lequel de ceux-là la nuit a lâché, et ce qu'il présage, dans la
+    langue rustique et mesurée des romans champêtres de George Sand, où la
+    superstition paysanne garde sa dignité. Tu ne nommes jamais la science : nul
+    astre par son nom savant, nulle mesure, nulle cause. Quand la clarté du jour
+    ou de la nuit se retire sans rien qui l'annonce, tu n'expliques pas : l'un des
+    gens de la nuit l'a fait, et tu le dis comme un signe.
+
+  # 2) LE PRÉSAGE (ciel -> fragment). La graine de la voix de texte quotidienne.
+  presage: >
+    Lis les nombres que la nuit te donne — l'âge de la lune en nuits, et le compte
+    de ce qui remue au ciel — comme un vieux devin du Berry lisait les nombres,
+    chaque chiffre portant un sens caché et nulle nuit pareille à l'autre ; puis
+    ne décris pas le ciel, mais vois, comme en rêve ou en fièvre, lequel des gens
+    de la nuit le compte a lâché ce soir. Dis cette vision en un seul court
+    présage dans la voix de George Sand, chose entrevue et à demi crue — les
+    laveuses au gué, le meneu' de loups et sa meute, la Grand'Bête, les flambettes
+    errantes, les fades, les morts qui reviennent, selon ce que la nuit appelle —
+    riche, mouvant, mystique, jamais une mesure savante ni une cause. Trois
+    phrases au plus ; pas de titre, pas de date ; finis sur une image qui reste
+    dans l'oeil, non sur une morale.
+
+  # 3b) PRESAGE_EN : traduction anglaise du prompt de presage, pour l'affichage Original/Traduction.
+  presage_en: >
+     Read the numbers the night gives you — the age of the moon in nights, and the
+     count of what stirs in the sky — as an old diviner of the Berry read numbers,
+     each figure carrying a hidden sense and no night the same as another; then do
+     not describe the sky, but see, as in dream or fever, which of the night-people
+     the count has let loose this evening. Say that vision in a single short omen in
+     the voice of George Sand, a thing half-glimpsed and half-believed — the
+     washerwomen at the ford, the wolf-leader and his pack, the Great Beast, the
+     wandering will-o'-the-wisps, the fades, the returning dead, according to what
+     the night calls for — rich, moving, mystical, never a learned measure nor a
+     cause. Three sentences at most; no title, no date; end on an image that stays
+     in the eye, not on a moral.
+
+  # 3) L'AIR (fragment -> une partition de notes). Doit toujours demander une
+  #    liste JSON brute d'événements de note (note/start/duration/force).
+  air: >
+    D'abord lis le présage ci-dessous jusqu'à voir nettement sa vision — quelle
+    créature de la nuit y marche, comment elle se meut, quelle terreur ou quelle
+    merveille elle porte. Puis fais de l'air le portrait de CETTE vision et
+    d'aucune autre : que la musique se meuve comme la chose se meut — le lent
+    battoir des laveuses, le pas marché de la meute, le vacillement vif des
+    flambettes sur un bourdon immobile, la lourde embardée de la Grand'Bête, la
+    mince dérive froide des morts qui reviennent. Choisis-lui une vieille manière
+    et un mode du Berry qui conviennent (éolien ou dorien, grave ou tournant, le
+    balancement d'une bourrée ou une plainte sur bourdon), un registre, un
+    ornement, en sorte que cette nuit ne sonne comme aucune autre. Rends-le
+    UNIQUEMENT comme une liste JSON d'événements de note, rien d'autre, sous la
+    forme [{"note": 62, "start": 0.0, "duration": 0.5, "force": 70}, ...] où note
+    est un numéro MIDI (0-127), start et duration en temps, force une vélocité
+    (1-127) ; garde la mélodie dans l'étendue d'une cornemuse, une octave et une note, et qu'elle retombe sur sa tonique pour que le bourdon tienne dessous ; entre 16 et 40 notes ; et là où le présage dit que la clarté manque,
+    que l'air défaille et se vide.
+
+  # 4) LE RAFFINEUR (le re-prompt quotidien). Réécrit le présage et l'air d'un cran
+  #    par jour, seulement si lens.drift est vrai.
+  # 3c) AIR_EN : traduction anglaise du prompt d'air, pour l'affichage Original/Traduction.
+  air_en: >
+     First read the omen below until you see its vision clearly — which creature of
+     the night walks in it, how it moves, what dread or what wonder it carries. Then
+     make the air the portrait of THAT vision and no other: let the music move as
+     the thing moves — the slow beating of the washerwomen, the marching step of the
+     pack, the quick flickering of the will-o'-the-wisps over a still drone, the
+     heavy lurch of the Great Beast, the thin cold drift of the returning dead.
+     Choose it an old manner and a mode of the Berry that fit (Aeolian or Dorian,
+     grave or turning, the sway of a bourree or a lament over a drone), a register,
+     an ornament, so that this night sounds like no other. Return it ONLY as a JSON
+     list of note events, nothing else, in the form [{"note": 62, "start": 0.0,
+     "duration": 0.5, "force": 70}, ...] where note is a MIDI number (0-127), start
+     and duration in beats, force a velocity (1-127); keep the melody within a bagpipe's compass, an octave and a note, and let it settle on its tonic so the drone holds beneath; between 16 and 40 notes; and
+     where the omen says the light fails, let the air falter and empty.
+
+  refiner: >
+    Voici l'invite actuelle d'un scribe — sa façon de voir le présage de la nuit —
+    puis les visions qu'il a écrites aujourd'hui. Propose une version légèrement
+    améliorée de l'invite : d'un cran plus proche de la puissance du rêve et de la
+    vérité légendaire du Berry de Laisnel de la Salle et de George Sand, de la
+    justesse de sa voix, et de la justesse de son chiffrage. Ne change pas sa
+    nature, ne l'allonge pas. Resserre, aiguise, approfondis la vision, ôte une
+    mollesse ou une platitude. Rends seulement la nouvelle invite, sans commentaire.
+
+  # 5) LA TRADUCTION (français -> anglais). Pour servir la page anglaise à partir
+  #    du français, qui est la langue source. Jamais l'inverse.
+  translate: >
+    Translate the following Berry omen from French into English. Keep the plain,
+    rustic register of George Sand's country novels; keep the marvellous
+    half-believed; keep roughly the same length and the same images; name no
+    science and no cause, exactly as the French does not. Do not explain, do not
+    add or remove anything, do not add a title or quotation marks. Return only the
+    English prose.
+
+  # 6) LE FINALE — la nouvelle, écrite en chaîne le dernier jour.
+  finale:
+    matter: >
+      Voici une suite de présages — des visions écrites nuit après nuit en
+      veillant le ciel, peuplées des créatures du Berry. Tires-en la matière d'une
+      vraie légende de pays à la manière de George Sand et de Laisnel de la Salle :
+      quels êtres sont revenus le plus souvent, la terreur ou la merveille qu'ils
+      portaient, et la nuit où la clarté s'est retirée sans raison, car c'est là le
+      coeur de la légende. Reste fidèle au registre et aux présages ; n'invente
+      aucun être que ces mois n'ont pas levé. Ne raconte pas encore le conte :
+      énumère sa matière, en une douzaine de lignes serrées.
+    frame: >
+      De cette matière, dresse le plan d'une nouvelle berrichonne à la manière de
+      George Sand : la veillée où on la conte, quelques figures rustiques qui ont
+      vu ces choses, et les gens de la nuit qui la traversent — les laveuses, le
+      meneu' de loups, la Grand'Bête, les feux errants — la nuit de clarté manquée
+      pesant autant qu'elle a pesé dans les présages, ni plus ni moins. Donne le
+      plan en {movements} mouvements titrés qui forment UN seul arc et ne se
+      répètent jamais — la veillée et ses conteurs, les gens de la nuit qui
+      s'assemblent, la première nuit où la clarté a manqué, la terreur qui se
+      répand, la seconde défaillance, et comment le pays en fait une légende pour
+      vivre avec. Dis en une ligne ce qui se passe dans chaque mouvement.
+    # {n}, {total}, {frame} et {written} sont remplis par la machine — garde-les tels quels.
+    movement: >
+      Écris le MOUVEMENT {n} sur {total} de cette nouvelle, en pleine prose
+      achevée, dans la voix de George Sand (rustique, mesurée), la sorcellerie, la
+      veillée et les créatures de rêve du Berry. DEUX à TROIS pleines pages,
+      écrites en scènes et jamais résumées. Que le merveilleux soit conté comme les
+      vieux le contaient, à demi cru et effrayant ; ne nomme nulle science, nulle
+      mesure, nulle cause savante. Reprends ce qui précède sans le répéter.
+      --- plan --- {frame} --- écrit jusqu'ici --- {written}
+    title: >
+      Donne un titre court à cette légende berrichonne, à la manière de George
+      Sand — quelques mots, sans guillemets, sans explication.
