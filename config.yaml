@@ -37,7 +37,7 @@ tempo:
   want_power: 2         # steep: a mere dimming (cloud) stays quiet; a true failing floods hard
   cap: 12               # the most omens one breath may utter (the ceiling of the flood)
   vespers_floor: 1      # the one beat of the day that always speaks, so no day is silent
-  vespers_hour_utc: 19  # which beat is vespers (UTC hour; a 2-hour tolerance is applied)
+  vespers_hour_utc: 20  # which beat is vespers (UTC hour; a 2-hour tolerance is applied)
 
 # (the cadence is the cron in .github/workflows/fadette.yml: a breath every two
 #  hours. That is what samples a failing of light — the eclipse near 18:00 UTC
