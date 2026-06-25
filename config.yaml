@@ -15,7 +15,7 @@ place:
   longitude: 2.394161
 
 window:
-  birth: "2026-07-01"
+  birth: "2026-06-25"
   death: "2026-08-31"        # the 31st triggers the finale (the closing nouvelle)
 
 # ----------------------------------------------------------------- the tempo
