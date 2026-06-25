@@ -10,6 +10,7 @@ sky turned to sensations, never a date nor the word "eclipse".
 """
 from __future__ import annotations
 import json
+import re
 from . import infomaniak, entropy
 
 # Safe fallbacks, used only if a prompt is missing from config.yaml.
@@ -72,7 +73,7 @@ def text_to_score(conf: dict, fragment: str, prompts: dict) -> list:
     engraving to .mid is done afterwards by src/midi.py."""
     task = (prompts.get("score", seed_air(conf)) + entropy.nudge_air()
             + "\n\n--- the fragment ---\n" + fragment)
-    raw = infomaniak.text(conf, system(conf), task, temperature=0.8, max_tokens=900)
+    raw = infomaniak.text(conf, system(conf), task, temperature=0.8, max_tokens=1500)
     return _extract_notes(raw)
 
 
@@ -140,12 +141,15 @@ def _p(conf: dict) -> dict:
 
 
 def _extract_notes(raw: str) -> list:
-    s = raw.strip()
-    a, b = s.find("["), s.rfind("]")
-    if a != -1 and b != -1 and b > a:
+    """Pull note objects from the model's reply, robust to prose, code fences,
+    a trailing comma, or a reply truncated before the closing bracket: each flat
+    {...} object is parsed on its own, and an incomplete final one is dropped."""
+    out = []
+    for m in re.finditer(r"\{[^{}]*\}", raw):
         try:
-            notes = json.loads(s[a:b + 1])
-            return [n for n in notes if isinstance(n, dict) and "note" in n]
+            n = json.loads(m.group(0))
         except ValueError:
-            pass
-    return []
+            continue
+        if isinstance(n, dict) and "note" in n:
+            out.append(n)
+    return out
